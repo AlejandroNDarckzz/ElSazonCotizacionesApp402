@@ -1,0 +1,64 @@
+﻿@using ElSazonCotizacionesApp.Contracts
+@inject IProductoMenuService ProductoMenuService
+@rendermode InteractiveServer
+
+<div class="modal" style="display: block; background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@(ProductoId.HasValue ? "Editar Producto" : "Nuevo Producto")</h5>
+                <button type="button" class="btn-close" @onclick="Cancelar"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@producto" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <InputText @bind-Value="producto.NombreProducto" class="form-control" />
+                        <ValidationMessage For="@(() => producto.NombreProducto)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <InputTextArea @bind-Value="producto.Descripcion" class="form-control" rows="3" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio</label>
+                            <InputNumber @bind-Value="producto.Precio" class="form-control" />
+                            <ValidationMessage For="@(() => producto.Precio)" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Imagen</label>
+                        <InputFile OnChange="CargarImagen" accept="image/*" class="form-control" />
+
+                        @if (imagenPreview != null)
+                        {
+                            <img src="data:@tipoImagenPreview;base64,@Convert.ToBase64String(imagenPreview)"
+                                 class="img-thumbnail mt-2"
+                                 style="max-width: 200px;"
+                                 alt="Preview" />
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(mensaje))
+                    {
+                        <div class="alert @(exito ? "alert-success" : "alert-danger")">
+                            @mensaje
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+

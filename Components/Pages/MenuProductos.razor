@@ -1,0 +1,103 @@
+﻿@page "/menuproductos"
+@using ElSazonCotizacionesApp.Contracts
+@inject IProductoMenuService ProductoMenuService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject IAutenticacionEstadoService AutenticacionEstadoService
+@rendermode InteractiveServer
+
+<PageTitle>Gestión de Productos</PageTitle>
+
+@if (!AutenticacionEstadoService.EsAdministrador())
+{
+    <div class="container mt-5">
+        <div class="alert alert-danger text-center">
+            <h4>⚠️ Acceso Denegado</h4>
+            <p>No tienes permisos para acceder a esta página.</p>
+            <p>Solo los administradores pueden gestionar productos.</p>
+            <a href="/" class="btn btn-primary mt-3">Volver al inicio</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Gestión de Productos</h2>
+            <button class="btn btn-success" @onclick="AbrirFormularioNuevo">
+                <i class="bi bi-plus-circle"></i> Nuevo Producto
+            </button>
+        </div>
+
+        @if (productos == null)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando productos...</span>
+                </div>
+            </div>
+        }
+        else if (!productos.Any())
+        {
+            <div class="alert alert-info">
+                No hay productos registrados. ¡Agrega el primero!
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in productos)
+                        {
+                            <tr>
+                                <td>
+                                    @if (producto.Imagen != null)
+                                    {
+                                        <img src="data:@producto.TipoImagen;base64,@Convert.ToBase64String(producto.Imagen)" 
+                                             style="width: 50px; height: 50px; object-fit: cover;" 
+                                             alt="@producto.NombreProducto" />
+                                    }
+                                    else
+                                    {
+                                        <div style="width: 50px; height: 50px; background: #ddd; display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-image"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>@producto.NombreProducto</td>
+                                <td>@producto.Descripcion</td>
+                                <td>$@producto.Precio.ToString("N2")</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" @onclick="() => AbrirFormularioEditar(producto.Id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarProducto(producto.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (mostrarFormulario)
+        {
+            <FormularioProductos
+                ProductoId="productoIdSeleccionado" 
+                OnGuardar="CerrarFormulario" 
+                OnCancelar="CerrarFormulario" />
+        }
+    </div>
+}

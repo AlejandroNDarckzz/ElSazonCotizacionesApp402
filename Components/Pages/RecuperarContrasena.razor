@@ -1,0 +1,49 @@
+﻿@page "/recuperarcontrasena"
+@using ElSazonCotizacionesApp.Contracts
+@inject IUsuarioLoginService UsuarioLoginService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<div class="container mt-5">
+    <div class="card" style="max-width: 400px; margin: auto;">
+        <div class="card-header">
+            <h3>Recuperar Contraseña</h3>
+        </div>
+        <div class="card-body">
+            <EditForm Model="@model" OnValidSubmit="CambiarContraseña" FormName="RecuperarForm">
+                <DataAnnotationsValidator />
+
+                <div class="mb-3">
+                    <label class="form-label">Correo Electrónico</label>
+                    <InputText @bind-Value="model.Correo" class="form-control" type="email" />
+                    <ValidationMessage For="@(() => model.Correo)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nueva Contraseña</label>
+                    <InputText @bind-Value="model.NuevaContraseña" class="form-control" type="password" />
+                    <ValidationMessage For="@(() => model.NuevaContraseña)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Confirmar Nueva Contraseña</label>
+                    <InputText @bind-Value="model.ConfirmarContraseña" class="form-control" type="password" />
+                    <ValidationMessage For="@(() => model.ConfirmarContraseña)" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="alert @(exito ? "alert-success" : "alert-danger")">
+                        @mensaje
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-primary w-100">Cambiar Contraseña</button>
+            </EditForm>
+
+            <div class="mt-3 text-center">
+                <a href="/login">Volver al inicio de sesión</a>
+            </div>
+        </div>
+    </div>
+</div>

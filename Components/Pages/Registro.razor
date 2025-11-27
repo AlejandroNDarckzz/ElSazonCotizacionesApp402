@@ -1,0 +1,51 @@
+﻿@page "/registro"
+@using ElSazonCotizacionesApp.Contracts
+@inject IUsuarioLoginService UsuarioLoginService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Registro</PageTitle>
+<div class="container mt-5">
+    <div class="card" style="max-width: 400px; margin: auto;">
+        <div class="card-header">
+            <h3>Registro</h3>
+        </div>
+        <div class="card-body">
+            <EditForm Model="@model" OnValidSubmit="Registrar" FormName="RegistroForm">
+                <DataAnnotationsValidator />
+
+                <div class="mb-3">
+                    <label>Nombre de Usuario</label>
+                    <InputText @bind-Value="model.NombreUsuario" class="form-control" />
+                    <ValidationMessage For="@(() => model.NombreUsuario)" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Correo</label>
+                    <InputText @bind-Value="model.Correo" class="form-control" type="email" />
+                    <ValidationMessage For="@(() => model.Correo)" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Contraseña</label>
+                    <InputText @bind-Value="model.Password" class="form-control" type="password" />
+                    <ValidationMessage For="@(() => model.Password)" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="alert @(exito ? "alert-success" : "alert-danger")">
+                        @mensaje
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-primary w-100">Registrar</button>
+            </EditForm>
+
+            <div class="mt-3 text-center">
+                <a href="/login">Ya tengo cuenta</a>
+            </div>
+        </div>
+    </div>
+</div>
+
