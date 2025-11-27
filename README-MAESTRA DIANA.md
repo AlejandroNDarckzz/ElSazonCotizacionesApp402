@@ -1,0 +1,2 @@
+Nuestra App Usa FrameWork Blazor Server y usando un base de datos alojada en nuestra base de datos local, por lo  que no es posible el que pueda ejecutarla, de cualquier manera en este repositorio le dejo todos los archivos del proyecto para visual studio + Un video demostracion de la AppWeb con su funcionalidad:
+https://drive.google.com/drive/folders/12AUY6eVBveTdpI0nbSwYQ1d_JisQX4Cs?usp=drive_link
